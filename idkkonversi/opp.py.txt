@@ -1,0 +1,60 @@
+import streamlit as st
+import datetime
+
+# Dapatkan tahun saat ini secara dinamis
+TAHUN_SEKARANG = datetime.datetime.now().year
+TAHUN_DEFAULT = 2025 # Tetapkan tahun default seperti pada program asli
+
+def hitung_usia(tahun_lahir, tahun_sekarang=TAHUN_DEFAULT):
+    """Menghitung usia (hanya tahun) berdasarkan tahun lahir."""
+    # Pastikan tahun sekarang yang digunakan tidak lebih kecil dari tahun lahir
+    if tahun_lahir > tahun_sekarang:
+        return 0 # Atau tangani kesalahan
+        
+    usia = tahun_sekarang - tahun_lahir
+    return usia
+
+# --- Konfigurasi Halaman Streamlit ---
+
+st.set_page_config(
+    page_title="Kalkulator Usia Sederhana",
+    layout="centered"
+)
+
+st.title("🎂 Kalkulator Usia Sederhana")
+st.markdown(f"Menggunakan tahun referensi: **{TAHUN_DEFAULT}** (sesuai program asli).")
+
+# --- Input Pengguna ---
+
+# Slider atau Number Input untuk Tahun Lahir
+# Kita batasi range-nya agar masuk akal
+min_tahun = TAHUN_SEKARANG - 100 
+max_tahun = TAHUN_SEKARANG
+default_input = 1995 # Contoh tahun
+
+tahun_lahir = st.number_input(
+    "Masukkan Tahun Lahir Anda:",
+    min_value=min_tahun,
+    max_value=max_tahun,
+    value=default_input,
+    step=1,
+    format="%d", # Memastikan input adalah integer
+    help=f"Masukkan tahun antara {min_tahun} hingga {max_tahun}"
+)
+
+# --- Tombol Hitung ---
+if st.button("Hitung Usia"):
+    # Panggil fungsi
+    usia_saat_ini = hitung_usia(tahun_lahir, tahun_sekarang=TAHUN_DEFAULT)
+
+    # Tampilkan Output
+    st.success(f"### 🎉 Hasil Perhitungan")
+    st.info(f"""
+    Jika Anda lahir tahun **{tahun_lahir}** dan tahun referensi adalah **{TAHUN_DEFAULT}**, 
+    usia Anda adalah: **{usia_saat_ini}** tahun.
+    """)
+
+# Catatan opsional: tampilkan usia saat ini (tahun ini)
+st.sidebar.subheader("Perhitungan Tahun Saat Ini")
+usia_sekarang_dinamis = hitung_usia(tahun_lahir, tahun_sekarang=TAHUN_SEKARANG)
+st.sidebar.markdown(f"Usia Anda di tahun **{TAHUN_SEKARANG}** adalah: **{usia_sekarang_dinamis}** tahun.")
